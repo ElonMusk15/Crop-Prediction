@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction - Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-600 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center">
+                    <i class="fas fa-seedling text-2xl mr-2"></i>
+                    <span class="text-xl font-semibold">Crop Prediction System</span>
+                </a>
+                <a href="/predict" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition duration-300">
+                    New Prediction
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Result Section -->
+    <div class="container mx-auto px-6 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <!-- Header -->
+                <div class="bg-green-600 text-white px-6 py-4">
+                    <h1 class="text-2xl font-bold">Prediction Results</h1>
+                    <p class="text-green-100">Based on your input parameters</p>
+                </div>
+
+                <!-- Prediction Result -->
+                <div class="p-6">
+                    <div class="mb-8 text-center">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Recommended Crop</h2>
+                        <div class="text-4xl font-bold text-green-600 mb-4">
+                            <i class="fas fa-plant-wilt mr-2"></i>
+                            {{ prediction.upper() }}
+                        </div>
+                    </div>
+
+                    <!-- Input Parameters Summary -->
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold mb-4">Location Details</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fas fa-map-marker-alt w-6 text-green-600"></i>
+                                    <span class="ml-2">Location: {{ data.location }}</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-temperature-high w-6 text-green-600"></i>
+                                    <span class="ml-2">Temperature: {{ data.temperature }}°C</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-tint w-6 text-green-600"></i>
+                                    <span class="ml-2">Humidity: {{ data.humidity }}%</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-cloud-rain w-6 text-green-600"></i>
+                                    <span class="ml-2">Rainfall: {{ data.rainfall }}mm</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-xl font-semibold mb-4">Soil Nutrients</h3>
+                            <div class="space-y-4">
+                                <!-- Nitrogen -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Nitrogen (N)</span>
+                                        <span>{{ data.nitrogen }}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-600 h-2 rounded-full transition-all duration-500 w-[{{ data.nitrogen }}%]"></div>
+                                    </div>
+                                </div>
+                                <!-- Phosphorus -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Phosphorus (P)</span>
+                                        <span>{{ data.phosphorus }}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-600 h-2 rounded-full transition-all duration-500 w-[{{ data.phosphorus }}%]"></div>
+                                    </div>
+                                </div>
+                                <!-- Potassium -->
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Potassium (K)</span>
+                                        <span>{{ data.potassium }}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-600 h-2 rounded-full transition-all duration-500 w-[{{ data.potassium }}%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ideal Conditions -->
+                    {% if requirements %}
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">Ideal Conditions for {{ prediction.title() }}</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="text-center">
+                                <p class="text-gray-600">Temperature</p>
+                                <p class="font-semibold">{{ requirements.temp[0] }}°C - {{ requirements.temp[1] }}°C</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-600">Humidity</p>
+                                <p class="font-semibold">{{ requirements.humidity[0] }}% - {{ requirements.humidity[1] }}%</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-600">Rainfall</p>
+                                <p class="font-semibold">{{ requirements.rainfall[0] }}mm - {{ requirements.rainfall[1] }}mm</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="/predict" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300">
+                    <i class="fas fa-redo mr-2"></i>New Prediction
+                </a>
+                <a href="/" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition duration-300">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-600 text-white mt-16">
+        <div class="container mx-auto px-6 py-4">
+            <div class="text-center">
+                <p>© 2024 Crop Prediction System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
