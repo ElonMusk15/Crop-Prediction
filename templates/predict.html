@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction - Input Parameters</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-600 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center">
+                    <i class="fas fa-seedling text-2xl mr-2"></i>
+                    <span class="text-xl font-semibold">Crop Prediction System</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form Section -->
+    <div class="container mx-auto px-6 py-8">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-8">Enter Crop Parameters</h1>
+            
+            {% if error %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                <span class="block sm:inline">{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form action="/predict" method="POST" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+                <!-- Location -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="location">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Location
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="location" name="location" type="text" placeholder="Enter your location" required>
+                </div>
+
+                <!-- Temperature -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="temperature">
+                        <i class="fas fa-temperature-high mr-2"></i>Temperature (°C)
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="temperature" name="temperature" type="number" step="0.1" min="0" max="50" 
+                           placeholder="Enter temperature" required>
+                </div>
+
+                <!-- Humidity -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="humidity">
+                        <i class="fas fa-tint mr-2"></i>Humidity (%)
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="humidity" name="humidity" type="number" step="0.1" min="0" max="100" 
+                           placeholder="Enter humidity" required>
+                </div>
+
+                <!-- Rainfall -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="rainfall">
+                        <i class="fas fa-cloud-rain mr-2"></i>Annual Rainfall (mm)
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           id="rainfall" name="rainfall" type="number" step="0.1" min="0" max="500" 
+                           placeholder="Enter annual rainfall" required>
+                </div>
+
+                <!-- Nutrient Ratios -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Soil Nutrient Ratios</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Nitrogen -->
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="nitrogen">
+                                Nitrogen (N)
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   id="nitrogen" name="nitrogen" type="number" step="0.1" min="0" max="100" 
+                                   placeholder="N ratio" required>
+                        </div>
+
+                        <!-- Phosphorus -->
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="phosphorus">
+                                Phosphorus (P)
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   id="phosphorus" name="phosphorus" type="number" step="0.1" min="0" max="100" 
+                                   placeholder="P ratio" required>
+                        </div>
+
+                        <!-- Potassium -->
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="potassium">
+                                Potassium (K)
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   id="potassium" name="potassium" type="number" step="0.1" min="0" max="100" 
+                                   placeholder="K ratio" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between">
+                    <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300"
+                            type="submit">
+                        <i class="fas fa-search mr-2"></i>Predict Suitable Crop
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-600 text-white mt-16">
+        <div class="container mx-auto px-6 py-4">
+            <div class="text-center">
+                <p>© 2024 Crop Prediction System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
