@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-600 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-seedling text-2xl mr-2"></i>
+                    <span class="text-xl font-semibold">Crop Prediction System</span>
+                </div>
+                <div>
+                    <a href="/predict" class="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition duration-300">
+                        Start Prediction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative">
+        <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('https://images.pexels.com/photos/440731/pexels-photo-440731.jpeg'); filter: brightness(0.5);"></div>
+        <div class="relative z-10 container mx-auto px-6 py-24 text-center text-white">
+            <h1 class="text-5xl font-bold mb-6">Smart Crop Prediction</h1>
+            <p class="text-xl mb-8">Make data-driven decisions for your agricultural success</p>
+            <a href="/predict" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition duration-300 inline-flex items-center">
+                <i class="fas fa-chart-line mr-2"></i>
+                Get Started
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-green-600 text-4xl mb-4">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Climate Analysis</h3>
+                <p class="text-gray-600">We analyze temperature, humidity, and rainfall patterns to determine optimal growing conditions.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-green-600 text-4xl mb-4">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Soil Assessment</h3>
+                <p class="text-gray-600">Evaluate soil nutrient levels (N, P, K) to ensure proper growing conditions for your crops.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-green-600 text-4xl mb-4">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">AI Prediction</h3>
+                <p class="text-gray-600">Our advanced algorithms predict the most suitable crop based on your local conditions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-600 text-white mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="text-center">
+                <p class="mb-4">© 2024 Crop Prediction System. All rights reserved.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="hover:text-green-200"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-green-200"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-green-200"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
