@@ -1,13 +1,80 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
+import joblib
+import logging
+
 class CropPredictor:
     def __init__(self):
-        # Define crop requirements (simplified for demonstration)
-        self.crop_requirements = {
-            'rice': {'temp': (20, 35), 'humidity': (60, 90), 'rainfall': (150, 300)},
-            'wheat': {'temp': (15, 25), 'humidity': (50, 70), 'rainfall': (75, 150)},
-            'corn': {'temp': (20, 30), 'humidity': (50, 80), 'rainfall': (100, 200)},
-            'cotton': {'temp': (25, 35), 'humidity': (40, 60), 'rainfall': (60, 150)},
-            'sugarcane': {'temp': (25, 35), 'humidity': (70, 90), 'rainfall': (150, 300)}
-        }
+        self.model = None
+        self.scaler = None
+        self.label_encoder = None
+        self.setup_logging()
+        self.train_model()
+
+    def setup_logging(self):
+        """Set up logging configuration"""
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
+
+    def train_model(self):
+        """Train the machine learning model using the crop dataset"""
+        try:
+            # Load and prepare the dataset
+            data = pd.read_csv('data/crop_data.csv')
+            
+            # Separate features and target
+            X = data[['N', 'P', 'K', 'temperature', 'humidity', 'rainfall']]
+            y = data['label']
+
+            # Initialize label encoder
+            self.label_encoder = LabelEncoder()
+            y_encoded = self.label_encoder.fit_transform(y)
+
+            # Initialize scaler
+            self.scaler = StandardScaler()
+            X_scaled = self.scaler.fit_transform(X)
+
+            # Split the data
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_scaled, y_encoded, test_size=0.2, random_state=42
+            )
+
+            # Train Random Forest model
+            self.model = RandomForestClassifier(
+                n_estimators=100,
+                random_state=42
+            )
+            self.model.fit(X_train, y_train)
+
+            # Calculate and log accuracy
+            train_accuracy = self.model.score(X_train, y_train)
+            test_accuracy = self.model.score(X_test, y_test)
+            
+            self.logger.info(f"Model trained successfully!")
+            self.logger.info(f"Training accuracy: {train_accuracy:.2f}")
+            self.logger.info(f"Testing accuracy: {test_accuracy:.2f}")
+
+            # Save the model and scaler
+            joblib.dump(self.model, 'data/crop_model.joblib')
+            joblib.dump(self.scaler, 'data/scaler.joblib')
+            joblib.dump(self.label_encoder, 'data/label_encoder.joblib')
+
+        except Exception as e:
+            self.logger.error(f"Error during model training: {str(e)}")
+            raise
+
+    def load_model(self):
+        """Load the trained model and scaler"""
+        try:
+            self.model = joblib.load('data/crop_model.joblib')
+            self.scaler = joblib.load('data/scaler.joblib')
+            self.label_encoder = joblib.load('data/label_encoder.joblib')
+        except Exception as e:
+            self.logger.error(f"Error loading model: {str(e)}")
+            self.train_model()
 
     def predict_crop(self, temperature, humidity, rainfall, n, p, k):
         """
@@ -34,32 +101,23 @@ class CropPredictor:
                    0 <= k <= 100):
                 raise ValueError("Input parameters out of valid range")
 
-            # Simple scoring system for each crop
-            scores = {}
+            # Prepare input data
+            input_data = np.array([[n, p, k, temperature, humidity, rainfall]])
             
-            for crop, requirements in self.crop_requirements.items():
-                temp_range = requirements['temp']
-                humidity_range = requirements['humidity']
-                rainfall_range = requirements['rainfall']
-                
-                # Calculate score based on how well conditions match requirements
-                temp_score = 1 if temp_range[0] <= temperature <= temp_range[1] else 0
-                humidity_score = 1 if humidity_range[0] <= humidity <= humidity_range[1] else 0
-                rainfall_score = 1 if rainfall_range[0] <= rainfall <= rainfall_range[1] else 0
-                
-                # Additional score based on NPK values (simplified)
-                npk_score = (n + p + k) / 300  # Normalize NPK sum
-                
-                # Calculate total score
-                total_score = (temp_score + humidity_score + rainfall_score) * 0.8 + npk_score * 0.2
-                scores[crop] = total_score
-
-            # Return the crop with highest score
-            best_crop = max(scores.items(), key=lambda x: x[1])[0]
-            return best_crop
+            # Scale the input data
+            input_scaled = self.scaler.transform(input_data)
+            
+            # Make prediction
+            prediction_encoded = self.model.predict(input_scaled)
+            
+            # Decode prediction
+            predicted_crop = self.label_encoder.inverse_transform(prediction_encoded)[0]
+            
+            return predicted_crop
 
         except Exception as e:
-            raise Exception(f"Error in prediction: {str(e)}")
+            self.logger.error(f"Error during prediction: {str(e)}")
+            raise
 
     def get_crop_requirements(self, crop_name):
         """
@@ -71,4 +129,47 @@ class CropPredictor:
         Returns:
             dict: Dictionary containing ideal requirements for the crop
         """
-        return self.crop_requirements.get(crop_name, None)
+        try:
+            # Load the dataset
+            data = pd.read_csv('data/crop_data.csv')
+            
+            # Filter data for the specific crop
+            crop_data = data[data['label'] == crop_name]
+            
+            if crop_data.empty:
+                return None
+            
+            # Calculate average requirements
+            requirements = {
+                'temp': (
+                    float(crop_data['temperature'].mean() - 2),
+                    float(crop_data['temperature'].mean() + 2)
+                ),
+                'humidity': (
+                    float(crop_data['humidity'].mean() - 5),
+                    float(crop_data['humidity'].mean() + 5)
+                ),
+                'rainfall': (
+                    float(crop_data['rainfall'].mean() - 20),
+                    float(crop_data['rainfall'].mean() + 20)
+                )
+            }
+            
+            return requirements
+
+        except Exception as e:
+            self.logger.error(f"Error getting crop requirements: {str(e)}")
+            return None
+
+if __name__ == "__main__":
+    # Test the model
+    predictor = CropPredictor()
+    test_prediction = predictor.predict_crop(
+        temperature=25.0,
+        humidity=65.0,
+        rainfall=150.0,
+        n=45,
+        p=50,
+        k=55
+    )
+    print(f"Test prediction: {test_prediction}")
